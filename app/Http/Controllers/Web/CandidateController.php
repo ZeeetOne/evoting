@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CandidateStoreRequest;
+use App\Http\Requests\CandidateUpdateRequest;
 use App\Models\Candidate;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -67,7 +68,9 @@ class CandidateController extends Controller implements HasMiddleware
      */
     public function show(string $id)
     {
-        //
+        $candidate = Candidate::findOrFail($id);
+
+        return view('pages.app.candidate.show', compact('candidate'));
     }
 
     /**
@@ -75,15 +78,33 @@ class CandidateController extends Controller implements HasMiddleware
      */
     public function edit(string $id)
     {
-        //
+        $candidate = Candidate::findOrFail($id);
+
+        return view('pages.app.candidate.edit', compact('candidate'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(CandidateUpdateRequest $request, string $id)
     {
-        //
+        try {
+            $candidate = Candidate::findOrFail($id);
+
+            $candidate->update([
+                'name' => $request->name,
+                'image' => $request->file('image') ? $request->file('image')->store('candidate', 'public') : $candidate->image,
+                'chairman' => $request->chairman,
+                'vice_chairman' => $request->vice_chairman,
+                'vision' => $request->vision,
+                'mission' => $request->mission,
+                'sort_order' => $request->sort_order,
+            ]);
+
+            return redirect()->route('app.candidate.index')->with('success', 'Candidate updated successfully.');
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Failed to update candidate, ' . $e->getMessage()]);
+        }
     }
 
     /**
@@ -91,6 +112,16 @@ class CandidateController extends Controller implements HasMiddleware
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $candidate = Candidate::findOrFail($id);
+
+            $candidate->delete();
+
+            Candidate::where('sort_order', '>', $candidate->sort_order)->decrement('sort_order');
+
+            return redirect()->route('app.candidate.index')->with('success', 'Candidate deleted successfully.');
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Failed to delete candidate, ' . $e->getMessage()]);
+        }
     }
 }
