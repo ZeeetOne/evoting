@@ -40,7 +40,7 @@
                                 @foreach ($candidates as $candidate)
                                     <tr>
                                         <td>{{ $candidate->name }}</td>
-                                        <td>{{ $candidate->image }}</td>
+                                        <td><img src="{{ asset('storage/' . $candidate->image) }}" alt="{{ $candidate->name }}" class="img-thumbnail" width="100"></td>
                                         <td>{{ $candidate->chairman }}</td>
                                         <td>{{ $candidate->vice_chairman }}</td>
                                         <td>{{ $candidate->vision }}</td>
