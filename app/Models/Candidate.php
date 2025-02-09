@@ -18,4 +18,9 @@ class Candidate extends Model
         'mission',
         'sort_order'
     ];
+
+    public function votes()
+    {
+        return $this->hasMany(Vote::class);
+    }
 }

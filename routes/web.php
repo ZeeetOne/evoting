@@ -15,6 +15,8 @@ Route::get('/', function () {
 Route::group(['prefix' => 'app', 'as' => 'app.', 'middleware' => 'auth'], function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    Route::get('/vote/{candidate}', [DashboardController::class, 'vote'])->name('vote');
+
     Route::resource('candidate', CandidateController::class);
     Route::resource('voter', VoterController::class);
 

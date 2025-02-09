@@ -32,6 +32,7 @@
                                     <th>Vision</th>
                                     <th>Mission</th>
                                     <th>Sort Order</th>
+                                    <th>Voting Count</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -46,6 +47,7 @@
                                         <td>{{ $candidate->vision }}</td>
                                         <td>{{ $candidate->mission }}</td>
                                         <td>{{ $candidate->sort_order }}</td>
+                                        <td>{{ $candidate->votes->count() }}</td>
                                         <td>
 
                                             @can('candidate-update')
